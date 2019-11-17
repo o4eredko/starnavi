@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from rest_framework import permissions
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z_@kwgk4jh1scw1%tdr$2g&!er7)hnjar#6b5pgj4et!a15ed*'
+SECRET_KEY = 'q0lczhe__mvg1+ul=%4a61=s!jj@!14&!v6pe^1hk840f-t!fo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +38,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',
-	'likes',
+
 	'posts'
 ]
 
@@ -59,7 +57,8 @@ ROOT_URLCONF = 'starnavi.urls'
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [],
+		'DIRS': [os.path.join(BASE_DIR, 'templates')]
+		,
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -125,7 +124,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
-	'DEFAULT_PERMISSION_CLASSES': [
-		'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-	]
+	'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+	'PAGE_SIZE': 10
 }

@@ -1,16 +1,22 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from likes import services as likes_services
 from .models import Post
 
 
-class PostSerializer(serializers.ModelSerializer):
-	is_fan = serializers.SerializerMethodField()
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+	posts = serializers.HyperlinkedRelatedField(many=True, view_name='post-detail', read_only=True)
+
+	class Meta:
+		model = User
+		fields = ('url', 'id', 'username', 'posts')
+
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+	author = serializers.ReadOnlyField(source='author.username')
+	created = serializers.DateTimeField(format='%H:%M:%S %d %b %Y', read_only=True)
 
 	class Meta:
 		model = Post
-		fields = ('id', 'title', 'content', 'total_likes', 'is_fan')
+		fields = ('url', 'id', 'title', 'content', 'created', 'author')
 
-	def get_is_fan(self, obj) -> bool:
-		user = self.context.get('request').user
-		return likes_services.is_fan(obj, user)
