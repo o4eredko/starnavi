@@ -14,7 +14,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
-	author = serializers.HyperlinkedIdentityField(view_name='user-detail', read_only=True)
+	author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True)
 	author_username = serializers.ReadOnlyField(source='author.username')
 	created = serializers.DateTimeField(format='%H:%M:%S %d %b %Y', read_only=True)
 	is_fan = serializers.SerializerMethodField()

@@ -1,3 +1,6 @@
 .idea/
 venv/
-**/__pycache__/
+starnavi/**/__pycache__/
+posts/**/__pycache__/
+starnavi/__pycache__/
+posts/__pycache__/
