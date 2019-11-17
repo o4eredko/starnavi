@@ -5,10 +5,8 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register('users', UserViewSet)
+router.register('posts', PostViewSet)
 
 urlpatterns = [
-	path('', api_root),
-	path('', include(router.urls)),
-	path('posts/', PostList.as_view(), name='post-list'),
-	path('posts/<int:pk>/', PostDetail.as_view(), name='post-detail'),
+	path('', include(router.urls))
 ]
