@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets, generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -25,7 +26,9 @@ def api_root(request, format=None):
 class PostViewSet(LikedMixin, viewsets.ModelViewSet):
 	queryset = Post.objects.all()
 	serializer_class = PostSerializer
-	permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+	pagination_class = PageNumberPagination
+	pagination_class.page_size = 10
 
 	def perform_create(self, serializer):
 		serializer.save(author=self.request.user)

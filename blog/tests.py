@@ -103,3 +103,29 @@ class TokenRefreshTestCase(APITestCase):
 		response = self.client.post(refresh_url, refresh_data)
 		self.access_token = response.data['access']
 		self.assertEquals(response.status_code, status.HTTP_200_OK)
+
+
+class UserViewSetTestCase(APITestCase):
+
+	def setUp(self):
+		data = {
+			'username': 'test_username',
+			'email': 'test_email@gmail.com',
+			'password': 'SecretPassword123',
+			'password2': 'SecretPassword123'
+		}
+		self.client.post(registration_url, data)
+		data['username'] = 'test_username2'
+		data['email'] = 'test_email2@gmail.com'
+		self.client.post(registration_url, data)
+
+	def test_get_user_list(self):
+		response = self.client.get(reverse('user-list'))
+		self.assertEquals(response.status_code, status.HTTP_200_OK)
+
+	def test_get_user_detail(self):
+		response = self.client.get(reverse('user-list'))
+		self.assertEquals(response.status_code, status.HTTP_200_OK)
+		last_user = response.data[-1]
+		response = self.client.get(last_user['url'])
+		self.assertEquals(response.status_code, status.HTTP_200_OK)
