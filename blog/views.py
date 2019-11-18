@@ -15,10 +15,10 @@ from .mixins import LikedMixin
 def api_root(request, format=None):
 	return Response({
 		'users': reverse('user-list', request=request, format=format),
-		'snippets': reverse('post-list', request=request, format=format),
-		'account-register': reverse('account-register', request=request, format=format),
-		'account-token': reverse('account-token', request=request, format=format),
-		'account-refresh': reverse('account-refresh', request=request, format=format),
+		'posts': reverse('post-list', request=request, format=format),
+		'registration': reverse('account-register', request=request, format=format),
+		'token-login': reverse('account-token', request=request, format=format),
+		'token-refresh': reverse('account-refresh', request=request, format=format),
 	})
 
 

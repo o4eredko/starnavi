@@ -18,12 +18,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class RegistrationSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 	password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+	email = serializers.EmailField(label='Email address', max_length=254, required=True)
 
 	class Meta:
 		model = User
 		fields = ('username', 'email', 'password', 'password2')
 
 	def save(self):
+		if User.objects.filter(email=self.validated_data['email']).exists():
+			raise serializers.ValidationError('User with this e-mail already exists')
 		user = User(email=self.validated_data['email'], username=self.validated_data['username'])
 		password = self.validated_data['password']
 		try:
