@@ -1,26 +1,37 @@
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
-from . import services
-from .serializers import UserSerializer
+from .models import Like
+from .serializers import UserSerializer, PostSerializer
 
 
-class LikedMixin:
-	@action(detail=True, methods=['GET', 'POST'])
+class LikesMixin:
+	@action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
 	def like(self, request, pk=None):
 		obj = self.get_object()
-		services.add_like(obj, request.user)
-		return Response()
+		obj_type = ContentType.objects.get_for_model(obj)
+		Like.objects.get_or_create(content_type=obj_type, object_id=obj.id, user=request.user)
 
-	@action(detail=True, methods=['GET', 'POST'])
+		serializer = PostSerializer(obj, context={'request': request})
+		return Response(serializer.data)
+
+	@action(detail=True, methods=['POST'], permission_classes=[IsAuthenticated])
 	def unlike(self, request, pk=None):
 		obj = self.get_object()
-		services.remove_like(obj, request.user)
-		return Response()
+		obj_type = ContentType.objects.get_for_model(obj)
+		Like.objects.filter(content_type=obj_type, object_id=obj.id, user=request.user).delete()
+
+		serializer = PostSerializer(obj, context={'request': request})
+		return Response(serializer.data)
 
 	@action(detail=True, methods=['GET'])
 	def fans(self, request, pk=None):
 		obj = self.get_object()
-		fans = services.get_fans(obj)
+		obj_type = ContentType.objects.get_for_model(obj)
+		fans = User.objects.filter(likes__content_type=obj_type, likes__object_id=obj.id)
+
 		serializer = UserSerializer(fans, many=True, context={'request': request})
 		return Response(serializer.data)

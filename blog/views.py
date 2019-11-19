@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from .models import Post
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PostSerializer, UserSerializer, RegistrationSerializer
-from .mixins import LikedMixin
+from .mixins import LikesMixin
 
 
 @api_view(['GET'])
@@ -23,7 +23,7 @@ def api_root(request, format=None):
 	})
 
 
-class PostViewSet(LikedMixin, viewsets.ModelViewSet):
+class PostViewSet(LikesMixin, viewsets.ModelViewSet):
 	queryset = Post.objects.all()
 	serializer_class = PostSerializer
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)

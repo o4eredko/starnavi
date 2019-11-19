@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from .models import Post
-from . import services as likes_services
+from .models import Post, Like
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -54,4 +54,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 	def get_is_fan(self, obj) -> bool:
 		user = self.context.get('request').user
-		return likes_services.is_fan(obj, user)
+		if not user.is_authenticated:
+			return False
+		obj_type = ContentType.objects.get_for_model(obj)
+		likes = Like.objects.filter(content_type=obj_type, object_id=obj.id, user=user)
+		return likes.exists()
