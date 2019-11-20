@@ -23,13 +23,8 @@ def api_root(request, format=None):
 	})
 
 
-<<<<<<< HEAD
-class PostViewSet(LikedMixin, viewsets.ModelViewSet):
-	queryset = Post.objects.all().order_by('id')
-=======
 class PostViewSet(LikesMixin, viewsets.ModelViewSet):
-	queryset = Post.objects.all()
->>>>>>> 8b130bcfea8fff75539586f5c8d7fef4ee2bbf37
+	queryset = Post.objects.all().order_by('id')
 	serializer_class = PostSerializer
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 	pagination_class = PageNumberPagination
