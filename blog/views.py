@@ -24,7 +24,7 @@ def api_root(request, format=None):
 
 
 class PostViewSet(LikedMixin, viewsets.ModelViewSet):
-	queryset = Post.objects.all()
+	queryset = Post.objects.all().order_by('id')
 	serializer_class = PostSerializer
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 	pagination_class = PageNumberPagination
