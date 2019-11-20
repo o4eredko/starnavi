@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from .models import Post
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PostSerializer, UserSerializer, RegistrationSerializer
-from .mixins import LikedMixin
+from .mixins import LikesMixin
 
 
 @api_view(['GET'])
@@ -23,8 +23,13 @@ def api_root(request, format=None):
 	})
 
 
+<<<<<<< HEAD
 class PostViewSet(LikedMixin, viewsets.ModelViewSet):
 	queryset = Post.objects.all().order_by('id')
+=======
+class PostViewSet(LikesMixin, viewsets.ModelViewSet):
+	queryset = Post.objects.all()
+>>>>>>> 8b130bcfea8fff75539586f5c8d7fef4ee2bbf37
 	serializer_class = PostSerializer
 	permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 	pagination_class = PageNumberPagination
