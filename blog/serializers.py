@@ -32,7 +32,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 		try:
 			validate_password(password)
 		except ValidationError as e:
-			raise serializers.ValidationError({'password': str(e)})
+			raise serializers.ValidationError({'password': list(e)})
 		password2 = self.validated_data['password2']
 		if password != password2:
 			raise serializers.ValidationError({'password': ['Passwords must match']})
