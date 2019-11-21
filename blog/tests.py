@@ -115,21 +115,26 @@ class UserViewSetTestCase(APITestCase):
 			'password': 'SecretPassword123',
 			'password2': 'SecretPassword123'
 		}
-		self.client.post(registration_url, user)
-		user['username'] = 'test_username2'
-		user['email'] = 'test_email2@gmail.com'
-		self.client.post(registration_url, user)
+		self.user = self.client.post(registration_url, user)
+		second_user = {
+			'username': 'test_username2',
+			'email': 'test_email2@gmail.com',
+			'password': 'SecretPassword123',
+			'password2': 'SecretPassword123'
+		}
+		self.second_user = self.client.post(registration_url, second_user)
 
 	def test_user_list(self):
 		response = self.client.get(reverse('user-list'))
 		self.assertEquals(response.status_code, status.HTTP_200_OK)
+		self.assertEquals(len(response.data), 2)
 
 	def test_user_detail(self):
 		response = self.client.get(reverse('user-list'))
-		self.assertEquals(response.status_code, status.HTTP_200_OK)
-		last_user = response.data[-1]
-		response = self.client.get(last_user['url'])
-		self.assertEquals(response.status_code, status.HTTP_200_OK)
+		for user in response.data:
+			user_url = user.get('url')
+			response = self.client.get(user_url)
+			self.assertEquals(response.status_code, status.HTTP_200_OK)
 
 
 class PostViewSetTestCase(APITestCase):
